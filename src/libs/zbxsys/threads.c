@@ -68,8 +68,9 @@ int	zbx_child_fork()
 	pid = zbx_fork();
 
 	sigprocmask(SIG_SETMASK, &orig_mask, NULL);
-
+	
 	/* ignore SIGCHLD to avoid problems with exiting scripts in zbx_execute() and other cases */
+	/* 返回0是子进程，父进程返回1，子进程和父进程根据cpu时间片随机先后执行 */
 	if (0 == pid)
 		signal(SIGCHLD, SIG_DFL);
 
@@ -125,7 +126,7 @@ ZBX_THREAD_HANDLE	zbx_thread_start(ZBX_THREAD_ENTRY_POINTER(handler), zbx_thread
 #else
 	if (0 == (thread = zbx_child_fork()))	/* child process */
 	{
-		(*handler)(thread_args);
+		(*handler)(thread_args); //执行子进程相应的函数
 
 		/* The zbx_thread_exit must be called from the handler. */
 		/* And in normal case the program will never reach this point. */

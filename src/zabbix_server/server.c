@@ -752,17 +752,20 @@ int	main(int argc, char **argv)
 #endif
 
 	/* parse the command-line */
+	//zabbix命令行参数解析
 	while ((char)EOF != (ch = (char)zbx_getopt_long(argc, argv, shortopts, longopts, NULL)))
 	{
 		switch (ch)
 		{
 			case 'c':
 				opt_c++;
+				//zbx_strdup封装strdup函数，在复制字符串的函数中进行内存申请
 				if (NULL == CONFIG_FILE)
 					CONFIG_FILE = zbx_strdup(CONFIG_FILE, zbx_optarg);
 				break;
 			case 'R':
 				opt_r++;
+				//zbx_optarg解析到的参数的指针
 				if (SUCCEED != parse_rtc_options(zbx_optarg, program_type, &t.data))
 					exit(EXIT_FAILURE);
 
